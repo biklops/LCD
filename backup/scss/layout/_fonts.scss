@@ -1,0 +1,10 @@
+/*  ---------------------------------------------------------
+	2. Embedded fonts styles
+	---------------------------------------------------------*/
+@font-face { @include fontface(brandon_grotesque, brandon_reg-webfont) };
+@font-face { @include fontface(brandon_grotesque, brandon_med-webfont, 500) };
+@font-face { @include fontface(brandon_grotesque, brandon_bld-webfont, bold) };
+@font-face { @include fontface(montserrat, montserrat-bold-webfont, bold) };
+@font-face { @include fontface(open_sans, opensans-light-webfont, 300) };
+@font-face { @include fontface(open_sans, opensans-webfont) };
+@font-face { @include fontface(open_sans, opensans-semibold-webfont, 600) };

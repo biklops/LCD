@@ -106,17 +106,19 @@
 }
 /* main navigation styles */
 #nav {
-	width: 165px;
+	width: 250px;
 	background: none;
 	border: none;
 	font: bold 15px/20px $base-font-brandon-grotesque;
 	text-transform: uppercase;
 	position: fixed;
 	top: 0;
-	left: -160px;
+	left: -250px;
 	bottom: 0;
 	overflow-y: auto;
 	z-index: 9999;
+	background: $gray;
+	border-right: 3px solid #353535;
 	transition: all linear $animation-speed;
 	
 	@include media('>=tablet') {
@@ -124,25 +126,16 @@
 		font-size: 17px;
 		line-height: 30px;
 		position: static;
+		border: none;
+		background: none;
 		overflow: hidden;
 	}
 	.nav-active & {
 		left: 0;
 	}
-	&:before {
-		@include pseudo-elements(0,5px,0,0);
-		background: $gray;
-		border-right: 3px solid #353535;
-		z-index: -1;
-		display: block;
-		
-		@include media('>=tablet') {
-			display: none;
-		}
-	}
 	> ul {
 		@extend %listreset;
-		padding: 20px 10px 20px 5px;
+		padding: 20px 5px;
 		position: relative;
 		
 		@include media('>=tablet') {
@@ -169,7 +162,7 @@
 				transition: all linear $animation-speed;
 				
 				@include media('>=tablet') {
-					padding: 20px 14px;
+					padding: 20px 15px;
 				}
 				@include media('>=desktop') {
 					padding: 20px 25px;

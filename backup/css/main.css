@@ -859,17 +859,19 @@ input[type="submit"] {
 /* main navigation styles */
 
 #nav {
-	width: 165px;
+	width: 250px;
 	background: none;
 	border: none;
 	font: bold 15px/20px "brandon_grotesque", "Arial", sans-serif;
 	text-transform: uppercase;
 	position: fixed;
 	top: 0;
-	left: -160px;
+	left: -250px;
 	bottom: 0;
 	overflow-y: auto;
 	z-index: 9999;
+	background: #51514d;
+	border-right: 3px solid #353535;
 	-webkit-transition: all linear .3s;
 	transition: all linear .3s;
 }
@@ -878,21 +880,8 @@ input[type="submit"] {
 	left: 0;
 }
 
-#nav:before {
-	content: "";
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 5px;
-	bottom: 0;
-	background: #51514d;
-	border-right: 3px solid #353535;
-	z-index: -1;
-	display: block;
-}
-
 #nav > ul {
-	padding: 20px 10px 20px 5px;
+	padding: 20px 5px;
 	position: relative;
 }
 
@@ -1053,12 +1042,11 @@ p {
 /* visual styles */
 
 .visual {
-	background: #262423;
+	background: url(../images/bg-visual.jpg) no-repeat 50% 13%/cover;
 }
 
 .visual .container {
 	min-height: 250px;
-	z-index: 9;
 }
 
 .visual span {
@@ -1123,7 +1111,9 @@ p {
 .practice h2 {
 	font-size: 25px;
 	line-height: 32px;
-	margin: 0 auto 15px;
+	text-transform: capitalize;
+	padding: 0 0 15px;
+	margin: 0;
 }
 
 .practice h3 {
@@ -1364,19 +1354,6 @@ p {
 	visibility: hidden;
 }
 
-.visual {
-	overflow: hidden;
-	position: relative;
-}
-
-.particle-hold {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100% !important;
-	height: 100% !important;
-}
-
 /* fadeout */
 
 /* fadein */
@@ -1517,11 +1494,9 @@ p {
 		font-size: 17px;
 		line-height: 30px;
 		position: static;
+		border: none;
+		background: none;
 		overflow: hidden;
-	}
-
-	#nav:before {
-		display: none;
 	}
 
 	#nav > ul {
@@ -1537,7 +1512,7 @@ p {
 	}
 
 	#nav > ul > li > a {
-		padding: 20px 14px;
+		padding: 20px 15px;
 	}
 
 	h1,
@@ -1585,10 +1560,10 @@ p {
 	}
 
 	.practice h2 {
-		max-width: 710px;
 		font-size: 35px;
 		line-height: 42px;
-		margin: 0 auto 40px;
+		padding: 0 20px 40px;
+		text-transform: uppercase;
 	}
 
 	.practice .two-columns {
@@ -1708,7 +1683,7 @@ p {
 	}
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 1024px) {
 	#nav > ul > li {
 		margin: 0 0 0 36px;
 	}
@@ -1769,7 +1744,7 @@ p {
 	.practice h2 {
 		font-size: 41px;
 		line-height: 48px;
-		margin: 0 auto 60px;
+		padding: 0 40px 60px;
 	}
 
 	.practice .two-columns .box2 h3 {

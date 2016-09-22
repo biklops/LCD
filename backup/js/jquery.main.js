@@ -3,25 +3,7 @@ jQuery(function(){
 	initAnchors();
 	initSlideShow();
 	initMobileNav();
-	initFixedScrollBlock();
-	initParticles();
 });
-
-function initParticles() {
-	if (jQuery('#particles-js').length !== 0) {
-		particlesJS.load('particles-js');
-	}
-}
-
-// initialize fixed blocks on scroll
-function initFixedScrollBlock() {
-	jQuery('#wrapper').fixedScrollBlock({
-		slideBlock: '.fixed-block',
-		positionType: 'fixed',
-		checkWidth: true,
-		fixedExtraTop: false
-	});
-}
 
 // fade gallery init
 function initSlideShow() {
@@ -45,280 +27,16 @@ function initMobileNav() {
 		hideOnClickOutside: true,
 		menuActiveClass: 'nav-active',
 		menuOpener: '.nav-opener',
-		menuDrop: '#nav',
-		onInit: function(self) {
-			var links = self.drop.find('a');
-
-			links.on('click', function() {
-				self.hide();
-			});
-		}
+		menuDrop: '#nav'
 	});
 }
 
 // initialize smooth anchor links
 function initAnchors() {
 	new SmoothScroll({
-		anchorLinks: '#nav a[href^="#"]:not([href="#"])',
-		extraOffset: function() {
-			return jQuery('#header').height();
-		}
+		anchorLinks: '#nav a[href^="#"]:not([href="#"])'
 	});
 }
-
-/*
- * FixedScrollBlock
- */
-;(function($, window) {
-	'use strict';
-	var isMobileDevice = ('ontouchstart' in window) ||
-						(window.DocumentTouch && document instanceof DocumentTouch) ||
-						/Windows Phone/.test(navigator.userAgent);
-
-	function FixedScrollBlock(options) {
-		this.options = $.extend({
-			fixedActiveClass: 'fixed-position',
-			slideBlock: '[data-scroll-block]',
-			positionType: 'auto',
-			checkWidth: false,
-			fixedOnlyIfFits: true,
-			container: null,
-			animDelay: 100,
-			animSpeed: 200,
-			extraBottom: 0,
-			fixedParentHeight: false,
-			fixedExtraTop: true,
-			extraTopFixed: 0,
-			extraTop: 0
-		}, options);
-		this.initStructure();
-		this.attachEvents();
-	}
-	FixedScrollBlock.prototype = {
-		initStructure: function() {
-			// find elements
-			this.win = $(window);
-			this.container = $(this.options.container);
-			this.slideBlock = this.container.find(this.options.slideBlock);
-			this.extraBoxes = $(this.options.extraBox);
-			this.extraTopCalc = 0;
-
-			// detect method
-			if(this.options.positionType === 'auto') {
-				this.options.positionType = isMobileDevice ? 'absolute' : 'fixed';
-			}
-		},
-		attachEvents: function() {
-			var self = this;
-
-			// bind events
-			this.onResize = function() {
-				if(!self.options.fixedExtraTop) {
-					self.extraTopCalc = 0;
-
-					self.extraBoxes.each(function() {
-						self.extraTopCalc += jQuery(this).outerHeight();
-					});
-
-					self.extraTopCalc += self.options.extraTopFixed;
-				}
-
-				self.resizeHandler();
-			};
-			this.onScroll = function() {
-				if(!self.options.fixedExtraTop) {
-					self.extraTopCalc = 0;
-
-					self.extraBoxes.each(function() {
-						self.extraTopCalc += jQuery(this).outerHeight();
-					});
-
-					self.extraTopCalc += self.options.extraTopFixed;
-				}
-
-				self.scrollHandler();
-			};
-
-			// handle events
-			this.win.on({
-				resize: this.onResize,
-				scroll: this.onScroll
-			});
-
-			// initial handler call
-			this.resizeHandler();
-		},
-		recalculateOffsets: function() {
-			var defaultOffset = this.slideBlock.offset(),
-				defaultPosition = this.slideBlock.position(),
-				holderOffset = this.container.offset(),
-				windowSize = this.win.height();
-
-			this.data = {
-				windowHeight: this.win.height(),
-				windowWidth: this.win.width(),
-
-				blockPositionLeft: defaultPosition.left,
-				blockPositionTop: defaultPosition.top,
-
-				blockOffsetLeft: defaultOffset.left,
-				blockOffsetTop: defaultOffset.top,
-				blockHeight: this.slideBlock.innerHeight(),
-
-				holderOffsetLeft: holderOffset.left,
-				holderOffsetTop: holderOffset.top,
-				holderHeight: this.container.innerHeight()
-			};
-		},
-		isVisible: function() {
-			return this.slideBlock.prop('offsetHeight');
-		},
-		fitsInViewport: function() {
-			if(this.options.fixedOnlyIfFits && this.data) {
-				return this.data.blockHeight + (this.options.fixedExtraTop ? this.options.extraTop : this.extraTopCalc) <= this.data.windowHeight;
-			} else {
-				return true;
-			}
-		},
-		resizeHandler: function() {
-			if(this.isVisible()) {
-				FixedScrollBlock.stickyMethods[this.options.positionType].onResize.apply(this, arguments);
-				this.scrollHandler();
-			}
-		},
-		scrollHandler: function() {
-			if(this.isVisible()) {
-				if(!this.data) {
-					this.resizeHandler();
-					return;
-				}
-				this.currentScrollTop = this.win.scrollTop();
-				this.currentScrollLeft = this.win.scrollLeft();
-				FixedScrollBlock.stickyMethods[this.options.positionType].onScroll.apply(this, arguments);
-			}
-		},
-		refresh: function() {
-			// refresh dimensions and state if needed
-			if(this.data) {
-				this.data.holderHeight = this.container.innerHeight();
-				this.data.blockHeight = this.slideBlock.innerHeight();
-				this.scrollHandler();
-			}
-		},
-		destroy: function() {
-			// remove event handlers and styles
-			this.slideBlock.removeAttr('style').removeClass(this.options.fixedActiveClass);
-			this.win.off({
-				resize: this.onResize,
-				scroll: this.onScroll
-			});
-		}
-	};
-
-	// sticky methods
-	FixedScrollBlock.stickyMethods = {
-		fixed: {
-			onResize: function() {
-				this.slideBlock.removeAttr('style');
-				this.recalculateOffsets();
-			},
-			onScroll: function() {
-				if(this.fitsInViewport() && this.currentScrollTop + (this.options.fixedExtraTop ? this.options.extraTop : this.extraTopCalc) > this.data.blockOffsetTop) {
-					if(this.currentScrollTop + (this.options.fixedExtraTop ? this.options.extraTop : this.extraTopCalc) + this.data.blockHeight > this.data.holderOffsetTop + this.data.holderHeight - this.options.extraBottom) {
-						this.slideBlock.css({
-							position: 'absolute',
-							top: this.data.blockPositionTop + this.data.holderHeight - this.data.blockHeight - this.options.extraBottom - (this.data.blockOffsetTop - this.data.holderOffsetTop),
-							left: this.data.blockPositionLeft,
-							width: this.options.checkWidth ? this.slideBlock.parent().outerWidth() : ''
-						});
-
-						if (this.options.fixedParentHeight) {
-							this.slideBlock.parent().css({
-								height: this.slideBlock.outerHeight()
-							});
-						}
-					} else {
-						this.slideBlock.css({
-							position: 'fixed',
-							top: (this.options.fixedExtraTop ? this.options.extraTop : this.extraTopCalc),
-							left: this.data.blockOffsetLeft - this.currentScrollLeft,
-							width: this.options.checkWidth ? this.slideBlock.parent().outerWidth() : ''
-						});
-
-						if (this.options.fixedParentHeight) {
-							this.slideBlock.parent().css({
-								height: this.slideBlock.outerHeight()
-							});
-						}
-					}
-					this.slideBlock.addClass(this.options.fixedActiveClass);
-				} else {
-					this.slideBlock.removeClass(this.options.fixedActiveClass).removeAttr('style');
-
-					if (this.options.fixedParentHeight) {
-						this.slideBlock.parent().css({
-							height: ''
-						});
-					}
-				}
-			}
-		},
-		absolute: {
-			onResize: function() {
-				this.slideBlock.removeAttr('style');
-				this.recalculateOffsets();
-
-				this.slideBlock.css({
-					position: 'absolute',
-					top: this.data.blockPositionTop,
-					left: this.data.blockPositionLeft
-				});
-
-				if (this.options.fixedParentHeight) {
-					this.slideBlock.parent().css({
-						height: this.slideBlock.outerHeight()
-					});
-				}
-
-				this.slideBlock.addClass(this.options.fixedActiveClass);
-			},
-			onScroll: function() {
-				var self = this;
-
-				if (this.options.fixedParentHeight) {
-					this.slideBlock.parent().css({
-						height: this.slideBlock.outerHeight()
-					});
-				}
-
-				clearTimeout(this.animTimer);
-				this.animTimer = setTimeout(function() {
-					var currentScrollTop = self.currentScrollTop + (self.options.fixedExtraTop ? self.options.extraTop : self.extraTopCalc),
-						initialPosition = self.data.blockPositionTop - (self.data.blockOffsetTop - self.data.holderOffsetTop),
-						maxTopPosition =  self.data.holderHeight - self.data.blockHeight - self.options.extraBottom,
-						currentTopPosition = initialPosition + Math.min(currentScrollTop - self.data.holderOffsetTop, maxTopPosition),
-						calcTopPosition = self.fitsInViewport() && currentScrollTop > self.data.blockOffsetTop ? currentTopPosition : self.data.blockPositionTop;
-
-					self.slideBlock.stop().animate({
-						top: calcTopPosition
-					}, self.options.animSpeed);
-				}, this.options.animDelay);
-			}
-		}
-	};
-
-	// jQuery plugin interface
-	$.fn.fixedScrollBlock = function(options) {
-		return this.each(function() {
-			var params = $.extend({}, options, {container: this}),
-				instance = new FixedScrollBlock(params);
-			$.data(this, 'FixedScrollBlock', instance);
-		});
-	};
-
-	// module exports
-	window.FixedScrollBlock = FixedScrollBlock;
-}(jQuery, this));
 
 /*
  * jQuery SlideShow plugin
@@ -717,7 +435,6 @@ function initAnchors() {
 		}, options);
 		this.initStructure();
 		this.attachEvents();
-		this.makeCallback('onInit', this);
 	}
 	MobileNav.prototype = {
 		initStructure: function() {
@@ -770,13 +487,6 @@ function initAnchors() {
 				this.hide();
 			} else {
 				this.show();
-			}
-		},
-		makeCallback: function(name) {
-			if(typeof this.options[name] === 'function') {
-				var args = Array.prototype.slice.call(arguments);
-				args.shift();
-				this.options[name].apply(this, args);
 			}
 		},
 		destroy: function() {
